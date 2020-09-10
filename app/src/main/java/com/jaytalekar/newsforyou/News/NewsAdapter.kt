@@ -6,22 +6,28 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.R
+import com.jaytalekar.newsforyou.databinding.NewsItemBinding
 import kotlin.random.Random
 
-class NewsAdapter : RecyclerView.Adapter<CustomViewHolder>(){
+class NewsAdapter : RecyclerView.Adapter<NewsAdapter.CustomViewHolder>(){
 
     override fun getItemCount(): Int = 30
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-        val itemView = LayoutInflater.from(parent.context).
-                                            inflate(R.layout.news_item, parent, false)
 
-        return CustomViewHolder(itemView)
+        return CustomViewHolder.from(parent)
 
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        val imageView = holder.imageView
+        val imageView = holder.newsImage
+
+        val likeImage = holder.likeImage
+
+        holder.isLiked = false
+
+        likeImage.setImageResource(R.drawable.heart_outline)
+
         val imageResId = when(Random.nextInt(0,10)){
             0 -> R.drawable.image_0
             1 -> R.drawable.image_1
@@ -37,9 +43,41 @@ class NewsAdapter : RecyclerView.Adapter<CustomViewHolder>(){
         }
 
         imageView.setImageResource(imageResId)
+
+        holder.itemView.setOnClickListener{
+            holder.onLikeClicked()
+        }
     }
+
+
+    class CustomViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+        val newsImage : ImageView = itemView.findViewById(R.id.news_image)
+        val likeImage : ImageView = itemView.findViewById(R.id.like_image)
+        var isLiked : Boolean = false
+
+        companion object{
+            fun from(parent : ViewGroup): CustomViewHolder{
+                val inflater = LayoutInflater.from(parent.context)
+
+                val binding = NewsItemBinding.inflate(inflater, parent, false)
+
+                return CustomViewHolder(binding.root)
+            }
+        }
+
+        fun onLikeClicked(){
+            if(!isLiked) {
+                likeImage.setImageResource(R.drawable.heart)
+                isLiked = true
+            }
+            else {
+                likeImage.setImageResource(R.drawable.heart_outline)
+                isLiked = false
+            }
+        }
+    }
+
+
 }
 
-class CustomViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-    val imageView : ImageView = itemView.findViewById(R.id.imageView)
-}
+
