@@ -28,7 +28,14 @@ class News : Fragment() {
                                                                 get(NewsViewModel::class.java)
 
         val adapter : NewsAdapter = NewsAdapter()
-        val manager= GridLayoutManager(activity, 3)
+        val manager= GridLayoutManager(activity, 1)
+
+//        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
+//            override fun getSpanSize(position: Int): Int = when(position){
+//                in RANDOM_POSITION -> 3
+//                else -> 1
+//            }
+//        }
 
         binding.newsList.adapter = adapter
         binding.newsList.layoutManager = manager

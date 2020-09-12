@@ -4,80 +4,138 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.R
-import com.jaytalekar.newsforyou.databinding.NewsItemBinding
+import com.jaytalekar.newsforyou.databinding.NewsItemBroadBinding
+import com.jaytalekar.newsforyou.databinding.TwoNewsItemBinding
 import kotlin.random.Random
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.CustomViewHolder>(){
+const val TWO_NEWS_ITEM = 0
+const val BROAD_NEWS_ITEM = 1
+const val ITEM_COUNT = 15
 
-    override fun getItemCount(): Int = 30
+val RANDOM_POSITION = listOf(3,5,10,12,15)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
+class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
-        return CustomViewHolder.from(parent)
+    override fun getItemCount(): Int = ITEM_COUNT
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
+        return when(viewType){
+            TWO_NEWS_ITEM -> TwoNewsViewHolder.from(parent)
+            BROAD_NEWS_ITEM -> BroadNewsViewHolder.from(parent)
+            else -> throw ClassCastException("Unknown ViewType $viewType")
+        }
 
     }
 
-    override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        val imageView = holder.newsImage
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        val likeImage = holder.likeImage
+        when(holder){
+            is TwoNewsViewHolder->{
 
-        holder.isLiked = false
+                holder.firstNewsImage.setImageResource(Utils.randomImage(TWO_NEWS_ITEM, 5))
 
-        likeImage.setImageResource(R.drawable.heart_outline)
+                holder.secondNewsImage.setImageResource(Utils.randomImage(TWO_NEWS_ITEM, 5))
 
-        val imageResId = when(Random.nextInt(0,10)){
-            0 -> R.drawable.image_0
-            1 -> R.drawable.image_1
-            2 -> R.drawable.image_2
-            3 -> R.drawable.image_3
-            4 -> R.drawable.image_4
-            5 -> R.drawable.image_5
-            6 -> R.drawable.image_6
-            7 -> R.drawable.image_7
-            8 -> R.drawable.image_8
-            9 -> R.drawable.image_9
-            else -> R.drawable.image_0
+                holder.firstNewsHeader.setText(R.string.lorem_ipsum_header)
+
+                holder.secondNewsHeader.setText(R.string.lorem_ipsum_header)
+
+            }
+
+            is BroadNewsViewHolder->{
+                val newsImage = holder.newsImage
+                val newsHeaderText = holder.newsHeaderText
+
+                val imageResId = Utils.randomImage(BROAD_NEWS_ITEM, 5)
+
+                newsImage.setImageResource(imageResId)
+
+                newsHeaderText.setText(R.string.lorem_ipsum_header)
+            }
         }
 
-        imageView.setImageResource(imageResId)
+    }
 
-        holder.itemView.setOnClickListener{
-            holder.onLikeClicked()
+    override fun getItemViewType(position: Int): Int {
+        return when(position){
+            in RANDOM_POSITION -> BROAD_NEWS_ITEM
+            else -> TWO_NEWS_ITEM
         }
     }
 
 
-    class CustomViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        val newsImage : ImageView = itemView.findViewById(R.id.news_image)
-        val likeImage : ImageView = itemView.findViewById(R.id.like_image)
-        var isLiked : Boolean = false
+    class BroadNewsViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+
+        val newsImage : ImageView = itemView.findViewById(R.id.news_image_broad)
+        val newsHeaderText : TextView = itemView.findViewById(R.id.news_header_text)
 
         companion object{
-            fun from(parent : ViewGroup): CustomViewHolder{
+            fun from(parent : ViewGroup): BroadNewsViewHolder{
                 val inflater = LayoutInflater.from(parent.context)
 
-                val binding = NewsItemBinding.inflate(inflater, parent, false)
+                val binding = NewsItemBroadBinding.inflate(inflater, parent, false)
 
-                return CustomViewHolder(binding.root)
+                return BroadNewsViewHolder(binding.root)
             }
         }
 
-        fun onLikeClicked(){
-            if(!isLiked) {
-                likeImage.setImageResource(R.drawable.heart)
-                isLiked = true
-            }
-            else {
-                likeImage.setImageResource(R.drawable.heart_outline)
-                isLiked = false
+    }
+
+    class TwoNewsViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
+
+        val firstNewsImage : ImageView = itemView.findViewById(R.id.news_image_1)
+        val firstNewsHeader : TextView = itemView.findViewById(R.id.news_header_text_1)
+
+        val secondNewsImage : ImageView = itemView.findViewById(R.id.news_image_2)
+        val secondNewsHeader : TextView = itemView.findViewById(R.id.news_header_text_2)
+
+        companion object{
+            fun from(parent : ViewGroup): TwoNewsViewHolder {
+                val inflater = LayoutInflater.from(parent.context)
+
+                val binding = TwoNewsItemBinding.inflate(inflater, parent, false)
+
+                return TwoNewsViewHolder(binding.root)
             }
         }
+
     }
 
 
+}
+
+class Utils{
+
+    companion object{
+
+        fun randomImage(viewType : Int, until : Int) : Int{
+            return when(viewType){
+                TWO_NEWS_ITEM -> when(Random.nextInt(0, until)){
+                    0 -> R.drawable.news_image_1
+                    1 -> R.drawable.news_image_2
+                    2 -> R.drawable.news_image_3
+                    3 -> R.drawable.news_image_4
+                    4 -> R.drawable.news_image_5
+                    else -> R.drawable.news_image_1
+                }
+
+                BROAD_NEWS_ITEM -> when(Random.nextInt(0, until)){
+                    0 -> R.drawable.image_broad_1
+                    1 -> R.drawable.image_broad_2
+                    2 -> R.drawable.image_broad_3
+                    3 -> R.drawable.image_broad_4
+                    4 -> R.drawable.image_broad_5
+                    else -> R.drawable.image_broad_1
+                }
+
+                else -> throw IllegalArgumentException("Unknown ViewType $viewType ")
+            }
+        }
+    }
 }
 
 

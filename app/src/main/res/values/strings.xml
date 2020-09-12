@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">News For You</string>
     <string name="news_fragment_message">Welcome to News Fragment</string>
+    <string name="lorem_ipsum_header">Leverage agile frameworks to provide a robust synopsis for high level overviews.</string>
 </resources>
