@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".NewsDetail.NewsDetail">
+
+        <ImageView
+            android:id="@+id/news_detail_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/news_image_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/image_broad_2"
+            tools:srcCompat="@drawable/image_broad_2" />
+
+        <TextView
+            android:id="@+id/news_header_text_broad"
+            style="@style/header_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/lorem_ipsum_header"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/news_detail_image"
+            tools:text="@string/lorem_ipsum_header" />
+
+        <TextView
+            android:id="@+id/news_detail"
+            style="@style/content_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="false"
+            android:padding="8dp"
+            android:scrollbars="vertical"
+            android:text="@string/news_content"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/news_header_text_broad"
+            app:layout_constraintVertical_bias="1.0"
+            tools:text="@string/news_content" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.R
 import com.jaytalekar.newsforyou.databinding.NewsItemBroadBinding
@@ -17,7 +18,7 @@ const val ITEM_COUNT = 15
 
 val RANDOM_POSITION = listOf(3,5,10,12,15)
 
-class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class NewsAdapter(private val viewModel : NewsViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     override fun getItemCount(): Int = ITEM_COUNT
 
@@ -40,9 +41,17 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
                 holder.secondNewsImage.setImageResource(Utils.randomImage(TWO_NEWS_ITEM, 5))
 
+                holder.firstNewsItem.setOnClickListener {
+                    viewModel.eventNavigateToNewsDetail()
+                }
+
                 holder.firstNewsHeader.setText(R.string.lorem_ipsum_header)
 
                 holder.secondNewsHeader.setText(R.string.lorem_ipsum_header)
+
+                holder.secondNewsItem.setOnClickListener{
+                    viewModel.eventNavigateToNewsDetail()
+                }
 
             }
 
@@ -55,6 +64,10 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
                 newsImage.setImageResource(imageResId)
 
                 newsHeaderText.setText(R.string.lorem_ipsum_header)
+
+                holder.broadNewsItem.setOnClickListener{
+                    viewModel.eventNavigateToNewsDetail()
+                }
             }
         }
 
@@ -70,8 +83,10 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     class BroadNewsViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
 
+        val broadNewsItem : CardView = itemView.findViewById(R.id.broad_news_item)
+
         val newsImage : ImageView = itemView.findViewById(R.id.news_image_broad)
-        val newsHeaderText : TextView = itemView.findViewById(R.id.news_header_text)
+        val newsHeaderText : TextView = itemView.findViewById(R.id.news_header_text_broad)
 
         companion object{
             fun from(parent : ViewGroup): BroadNewsViewHolder{
@@ -86,6 +101,9 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     }
 
     class TwoNewsViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
+
+        val firstNewsItem : CardView = itemView.findViewById(R.id.first_news_item)
+        val secondNewsItem : CardView = itemView.findViewById(R.id.second_news_item)
 
         val firstNewsImage : ImageView = itemView.findViewById(R.id.news_image_1)
         val firstNewsHeader : TextView = itemView.findViewById(R.id.news_header_text_1)

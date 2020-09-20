@@ -8,6 +8,15 @@
     <fragment
         android:id="@+id/news"
         android:name="com.jaytalekar.newsforyou.News.News"
-        android:label="fragment_news"
-        tools:layout="@layout/fragment_news" />
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_news">
+        <action
+            android:id="@+id/action_news_to_newsDetail"
+            app:destination="@id/newsDetail" />
+    </fragment>
+    <fragment
+        android:id="@+id/newsDetail"
+        android:name="com.jaytalekar.newsforyou.NewsDetail.NewsDetail"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_news_detail" />
 </navigation>

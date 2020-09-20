@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.jaytalekar.newsforyou.R
 import com.jaytalekar.newsforyou.databinding.FragmentNewsBinding
@@ -27,7 +29,9 @@ class News : Fragment() {
         val viewModel = ViewModelProvider(this, viewModelFactory).
                                                                 get(NewsViewModel::class.java)
 
-        val adapter : NewsAdapter = NewsAdapter()
+        val navController = this.findNavController()
+
+        val adapter : NewsAdapter = NewsAdapter(viewModel)
         val manager= GridLayoutManager(activity, 1)
 
 //        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
@@ -39,6 +43,13 @@ class News : Fragment() {
 
         binding.newsList.adapter = adapter
         binding.newsList.layoutManager = manager
+
+        viewModel.navigateToNewsDetails.observe(this.viewLifecycleOwner, Observer{
+            if(it == true){
+                navController.navigate(R.id.action_news_to_newsDetail)
+                viewModel.eventNavigateToNewsDetailCompleted()
+            }
+        })
 
         return binding.root
     }
