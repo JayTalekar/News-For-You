@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.R
-import com.jaytalekar.newsforyou.databinding.FragmentNewsBinding
 
 class News : Fragment() {
 
@@ -20,9 +19,9 @@ class News : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        // Inflate the Fragment and get its Data Binding instance
-        val binding : FragmentNewsBinding = DataBindingUtil.inflate(
-                        inflater, R.layout.fragment_news, container, false)
+        // Inflate the Fragment as usual
+        val rootView = LayoutInflater.from(this.activity)
+            .inflate(R.layout.fragment_news, container, false)
 
         val viewModelFactory = NewsViewModelFactory()
 
@@ -41,8 +40,9 @@ class News : Fragment() {
 //            }
 //        }
 
-        binding.newsList.adapter = adapter
-        binding.newsList.layoutManager = manager
+        val newsList = rootView.findViewById<RecyclerView>(R.id.news_list)
+        newsList.adapter = adapter
+        newsList.layoutManager = manager
 
         viewModel.navigateToNewsDetails.observe(this.viewLifecycleOwner, Observer{
             if(it == true){
@@ -51,7 +51,7 @@ class News : Fragment() {
             }
         })
 
-        return binding.root
+        return rootView
     }
 
 }
