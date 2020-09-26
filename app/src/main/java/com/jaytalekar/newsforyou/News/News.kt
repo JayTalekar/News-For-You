@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.jaytalekar.newsforyou.R
+import com.jaytalekar.newsforyou.network.Article
 
 class News : Fragment() {
 
@@ -60,11 +61,25 @@ class News : Fragment() {
 
         val responseTextView : TextView = rootView.findViewById(R.id.response_text)
 
-        viewModel.response.observe(this, Observer{
-            responseTextView.text = it
+        viewModel.articleList.observe(this, Observer{
+            it?.let{
+                responseTextView.text = getFirstArticle(it)
+            }
         })
 
         return rootView
+    }
+
+    fun getFirstArticle(articleList: List<Article>): String {
+        val firstArticle = articleList.first()
+        val buffer = StringBuffer()
+        buffer.append(firstArticle.title + "\n")
+            .append(firstArticle.author + "\n")
+            .append(firstArticle.content + "\n")
+            .append(firstArticle.imageUrl + "\n")
+            .append(firstArticle.articleUrl)
+
+        return buffer.toString()
     }
 
 }
