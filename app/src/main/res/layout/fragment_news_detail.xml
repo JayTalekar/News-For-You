@@ -20,7 +20,7 @@
         tools:srcCompat="@drawable/image_broad_2" />
 
     <TextView
-        android:id="@+id/news_header_text_broad"
+        android:id="@+id/news_detail_header"
         style="@style/header_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,11 +28,11 @@
         android:text="@string/lorem_ipsum_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/news_detail_image"
+        app:layout_constraintTop_toBottomOf="@id/news_detail_image"
         tools:text="@string/lorem_ipsum_header" />
 
     <TextView
-        android:id="@+id/news_detail"
+        android:id="@+id/news_detail_content"
         style="@style/content_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/news_header_text_broad"
+        app:layout_constraintTop_toBottomOf="@id/news_detail_header"
         app:layout_constraintVertical_bias="1.0"
         tools:text="@string/news_content" />
 

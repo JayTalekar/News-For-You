@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.R
-import com.jaytalekar.newsforyou.databinding.NewsItemBroadBinding
-import com.jaytalekar.newsforyou.databinding.TwoNewsItemBinding
 import kotlin.random.Random
 
 const val TWO_NEWS_ITEM = 0
@@ -86,15 +84,14 @@ class NewsAdapter(private val viewModel : NewsViewModel) : RecyclerView.Adapter<
         val broadNewsItem : CardView = itemView.findViewById(R.id.broad_news_item)
 
         val newsImage : ImageView = itemView.findViewById(R.id.news_image_broad)
-        val newsHeaderText : TextView = itemView.findViewById(R.id.news_header_text_broad)
+        val newsHeaderText : TextView = itemView.findViewById(R.id.news_header_broad)
 
         companion object{
             fun from(parent : ViewGroup): BroadNewsViewHolder{
-                val inflater = LayoutInflater.from(parent.context)
+                val broadNewsView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.news_item_broad, parent, false)
 
-                val binding = NewsItemBroadBinding.inflate(inflater, parent, false)
-
-                return BroadNewsViewHolder(binding.root)
+                return BroadNewsViewHolder(broadNewsView)
             }
         }
 
@@ -106,18 +103,17 @@ class NewsAdapter(private val viewModel : NewsViewModel) : RecyclerView.Adapter<
         val secondNewsItem : CardView = itemView.findViewById(R.id.second_news_item)
 
         val firstNewsImage : ImageView = itemView.findViewById(R.id.news_image_1)
-        val firstNewsHeader : TextView = itemView.findViewById(R.id.news_header_text_1)
+        val firstNewsHeader : TextView = itemView.findViewById(R.id.news_header_1)
 
         val secondNewsImage : ImageView = itemView.findViewById(R.id.news_image_2)
-        val secondNewsHeader : TextView = itemView.findViewById(R.id.news_header_text_2)
+        val secondNewsHeader : TextView = itemView.findViewById(R.id.news_header_2)
 
         companion object{
             fun from(parent : ViewGroup): TwoNewsViewHolder {
-                val inflater = LayoutInflater.from(parent.context)
+                val twoNewsView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.two_news_item, parent, false)
 
-                val binding = TwoNewsItemBinding.inflate(inflater, parent, false)
-
-                return TwoNewsViewHolder(binding.root)
+                return TwoNewsViewHolder(twoNewsView)
             }
         }
 
