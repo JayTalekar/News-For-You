@@ -12,12 +12,12 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:scaleType="fitXY"
-        android:src="@drawable/news_image_2"
+        android:src="@drawable/image_broad"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/image_broad_2"
-        tools:srcCompat="@drawable/image_broad_2" />
+        app:srcCompat="@drawable/image_broad"
+        tools:srcCompat="@drawable/image_broad" />
 
     <TextView
         android:id="@+id/news_detail_header"

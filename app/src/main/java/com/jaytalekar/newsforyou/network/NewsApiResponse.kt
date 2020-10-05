@@ -19,30 +19,30 @@ data class Article(
     val source : Source,
 
     @SerializedName("author")
-    val author : String,
+    val author : String?, //can be null
 
     @SerializedName("title")
     val title : String,
 
     @SerializedName("description")
-    val description : String,
+    val description : String?, //can be null
 
     @SerializedName("url")
     val articleUrl : String,
 
     @SerializedName("urlToImage")
-    val imageUrl : String,
+    val imageUrl : String?, //can be null
 
     @SerializedName("publishedAt")
     val publishedAt : String,
 
     @SerializedName("content")
-    val content : String
+    val content : String? //can be null
 )
 
 data class Source (
     @SerializedName("id")
-    val id : String,
+    val id : String?, //can be null
 
     @SerializedName("name")
     val name : String

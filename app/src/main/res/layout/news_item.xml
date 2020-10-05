@@ -3,12 +3,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/broad_news_item"
+    android:id="@+id/news_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginRight="8dp"
     app:cardCornerRadius="16dp"
     app:cardUseCompatPadding="false">
 
@@ -17,25 +14,27 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/news_image_broad"
+            android:id="@+id/news_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/image_broad_2" />
+            tools:srcCompat="@drawable/image_broad" />
 
         <TextView
-            android:id="@+id/news_header_broad"
+            android:id="@+id/news_header"
             style="@style/header_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/news_image_broad"
-            app:layout_constraintStart_toStartOf="@id/news_image_broad"
-            app:layout_constraintTop_toBottomOf="@id/news_image_broad"
+            app:layout_constraintEnd_toEndOf="@id/news_image"
+            app:layout_constraintStart_toStartOf="@id/news_image"
+            app:layout_constraintTop_toBottomOf="@id/news_image"
             tools:text="@string/lorem_ipsum_header" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
+

@@ -1,155 +1,98 @@
 package com.jaytalekar.newsforyou.News
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.net.toUri
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.jaytalekar.newsforyou.R
-import kotlin.random.Random
+import com.jaytalekar.newsforyou.network.Article
 
-const val TWO_NEWS_ITEM = 0
-const val BROAD_NEWS_ITEM = 1
-const val ITEM_COUNT = 15
 
-val RANDOM_POSITION = listOf(3,5,10,12,15)
+class NewsAdapter(private val viewModel: NewsViewModel) :
+    ListAdapter<Article, NewsAdapter.NewsViewHolder>(DiffCallback) {
 
-class NewsAdapter(private val viewModel : NewsViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
-
-    override fun getItemCount(): Int = ITEM_COUNT
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
-        return when(viewType){
-            TWO_NEWS_ITEM -> TwoNewsViewHolder.from(parent)
-            BROAD_NEWS_ITEM -> BroadNewsViewHolder.from(parent)
-            else -> throw ClassCastException("Unknown ViewType $viewType")
+    companion object DiffCallback : DiffUtil.ItemCallback<Article>() {
+        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem === newItem
         }
 
+        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem.source.id == newItem.source.id
+        }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
 
-        when(holder){
-            is TwoNewsViewHolder->{
+        return NewsViewHolder.from(parent)
+    }
 
-                holder.firstNewsImage.setImageResource(Utils.randomImage(TWO_NEWS_ITEM, 5))
+    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
+        holder.bind(getItem(position)!!)
 
-                holder.secondNewsImage.setImageResource(Utils.randomImage(TWO_NEWS_ITEM, 5))
+        holder.newsItem.setOnClickListener {
+            viewModel.eventNavigateToNewsDetail()
+        }
+    }
 
-                holder.firstNewsItem.setOnClickListener {
-                    viewModel.eventNavigateToNewsDetail()
+
+    class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        val newsItem: CardView = itemView.findViewById(R.id.news_item)
+
+        private val newsImage = itemView.findViewById<ImageView>(R.id.news_image)
+
+        private val newsHeader = itemView.findViewById<TextView>(R.id.news_header)
+
+        companion object {
+
+            fun from(parent: ViewGroup): NewsViewHolder {
+                val newsView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.news_item, parent, false)
+
+                return NewsViewHolder(newsView)
+            }
+        }
+
+        fun bind(article: Article?) {
+            article?.let {
+
+                newsHeader.text = it.title
+
+                var imgUri: Uri? = null
+                it.imageUrl?.let {
+                    imgUri = it.toUri().buildUpon().scheme("https").build()
                 }
 
-                holder.firstNewsHeader.setText(R.string.lorem_ipsum_header)
-
-                holder.secondNewsHeader.setText(R.string.lorem_ipsum_header)
-
-                holder.secondNewsItem.setOnClickListener{
-                    viewModel.eventNavigateToNewsDetail()
+                if (imgUri == null) {
+                    newsImage.visibility = View.GONE
+                    this.setIsRecyclable(false)
+                } else {
+                    Glide.with(newsImage.context)
+                        .load(imgUri)
+                        .apply(
+                            RequestOptions()
+                                .placeholder(R.drawable.loading_animation)
+                                .error(R.drawable.ic_broken_image)
+                        )
+                        .into(newsImage)
                 }
 
             }
 
-            is BroadNewsViewHolder->{
-                val newsImage = holder.newsImage
-                val newsHeaderText = holder.newsHeaderText
-
-                val imageResId = Utils.randomImage(BROAD_NEWS_ITEM, 5)
-
-                newsImage.setImageResource(imageResId)
-
-                newsHeaderText.setText(R.string.lorem_ipsum_header)
-
-                holder.broadNewsItem.setOnClickListener{
-                    viewModel.eventNavigateToNewsDetail()
-                }
-            }
-        }
-
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when(position){
-            in RANDOM_POSITION -> BROAD_NEWS_ITEM
-            else -> TWO_NEWS_ITEM
-        }
-    }
-
-
-    class BroadNewsViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-
-        val broadNewsItem : CardView = itemView.findViewById(R.id.broad_news_item)
-
-        val newsImage : ImageView = itemView.findViewById(R.id.news_image_broad)
-        val newsHeaderText : TextView = itemView.findViewById(R.id.news_header_broad)
-
-        companion object{
-            fun from(parent : ViewGroup): BroadNewsViewHolder{
-                val broadNewsView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.news_item_broad, parent, false)
-
-                return BroadNewsViewHolder(broadNewsView)
-            }
-        }
-
-    }
-
-    class TwoNewsViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
-
-        val firstNewsItem : CardView = itemView.findViewById(R.id.first_news_item)
-        val secondNewsItem : CardView = itemView.findViewById(R.id.second_news_item)
-
-        val firstNewsImage : ImageView = itemView.findViewById(R.id.news_image_1)
-        val firstNewsHeader : TextView = itemView.findViewById(R.id.news_header_1)
-
-        val secondNewsImage : ImageView = itemView.findViewById(R.id.news_image_2)
-        val secondNewsHeader : TextView = itemView.findViewById(R.id.news_header_2)
-
-        companion object{
-            fun from(parent : ViewGroup): TwoNewsViewHolder {
-                val twoNewsView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.two_news_item, parent, false)
-
-                return TwoNewsViewHolder(twoNewsView)
-            }
         }
 
     }
 
 
-}
-
-class Utils{
-
-    companion object{
-
-        fun randomImage(viewType : Int, until : Int) : Int{
-            return when(viewType){
-                TWO_NEWS_ITEM -> when(Random.nextInt(0, until)){
-                    0 -> R.drawable.news_image_1
-                    1 -> R.drawable.news_image_2
-                    2 -> R.drawable.news_image_3
-                    3 -> R.drawable.news_image_4
-                    4 -> R.drawable.news_image_5
-                    else -> R.drawable.news_image_1
-                }
-
-                BROAD_NEWS_ITEM -> when(Random.nextInt(0, until)){
-                    0 -> R.drawable.image_broad_1
-                    1 -> R.drawable.image_broad_2
-                    2 -> R.drawable.image_broad_3
-                    3 -> R.drawable.image_broad_4
-                    4 -> R.drawable.image_broad_5
-                    else -> R.drawable.image_broad_1
-                }
-
-                else -> throw IllegalArgumentException("Unknown ViewType $viewType ")
-            }
-        }
-    }
 }
 
 

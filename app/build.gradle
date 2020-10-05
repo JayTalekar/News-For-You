@@ -31,6 +31,15 @@ android {
     buildFeatures {
         dataBinding false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -38,7 +47,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
 
     // Support libraries
-    implementation "androidx.appcompat:appcompat:$version_appcompat"
+    implementation "androidx.appcompat:appcompat:1.0.0-rc02"
     implementation "androidx.fragment:fragment:$version_fragment"
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 
@@ -59,6 +68,8 @@ dependencies {
     // Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
+    // Feature module Support
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$version_navigation"
 
     // Testing
     testImplementation 'junit:junit:4.12'
@@ -75,4 +86,6 @@ dependencies {
     // Retrofit Coroutines Support
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
 
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$version_glide"
 }
