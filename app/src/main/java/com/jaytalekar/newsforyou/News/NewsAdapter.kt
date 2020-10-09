@@ -36,10 +36,12 @@ class NewsAdapter(private val viewModel: NewsViewModel) :
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        holder.bind(getItem(position)!!)
+        val article = getItem(position)!!
+
+        holder.bind(article)
 
         holder.newsItem.setOnClickListener {
-            viewModel.eventNavigateToNewsDetail()
+            viewModel.eventNavigateToNewsDetail(article)
         }
     }
 

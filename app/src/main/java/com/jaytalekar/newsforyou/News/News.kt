@@ -63,9 +63,9 @@ class News : Fragment() {
             }
         })
 
-        viewModel.navigateToNewsDetails.observe(this.viewLifecycleOwner, Observer{
-            if(it == true){
-                navController.navigate(R.id.action_news_to_newsDetail)
+        viewModel.navigateToSelectedNews.observe(this.viewLifecycleOwner, Observer{article ->
+            if(article != null){
+                navController.navigate(NewsDirections.actionNewsToNewsDetail(article))
                 viewModel.eventNavigateToNewsDetailCompleted()
             }
         })

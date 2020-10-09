@@ -19,9 +19,9 @@ class NewsViewModel(private val country: String) : ViewModel(){
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private val _navigateToNewsDetails = MutableLiveData<Boolean>()
-    val navigateToNewsDetails : LiveData<Boolean>
-        get() = _navigateToNewsDetails
+    private val _navigateToSelectedNews = MutableLiveData<Article>()
+    val navigateToSelectedNews : LiveData<Article>
+        get() = _navigateToSelectedNews
 
     private val _response = MutableLiveData<NewsApiResponse>()
     val response : LiveData<NewsApiResponse>
@@ -37,18 +37,18 @@ class NewsViewModel(private val country: String) : ViewModel(){
 
     init {
         _articleList.value = null
-        _navigateToNewsDetails.value = false
+        _navigateToSelectedNews.value = null
         _response.value = null
         _status.value = NewsApiStatus.LOADING
         getTopHeadLines()
     }
 
-    fun eventNavigateToNewsDetail(){
-        _navigateToNewsDetails.value = true
+    fun eventNavigateToNewsDetail(article: Article){
+        _navigateToSelectedNews.value = article
     }
 
     fun eventNavigateToNewsDetailCompleted(){
-        _navigateToNewsDetails.value = false
+        _navigateToSelectedNews.value = null
     }
 
     fun getTopHeadLines(){

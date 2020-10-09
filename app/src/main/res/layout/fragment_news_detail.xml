@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         android:src="@drawable/image_broad"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +47,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/news_detail_header"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="@string/news_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
