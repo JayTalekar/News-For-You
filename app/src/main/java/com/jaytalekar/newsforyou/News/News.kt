@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.jaytalekar.newsforyou.ApiStatus
 import com.jaytalekar.newsforyou.R
 import kotlinx.android.synthetic.main.fragment_news.view.*
 
@@ -81,22 +82,22 @@ class News : Fragment() {
         return rootView
     }
 
-    private fun setStatusImage(status: NewsApiStatus){
+    private fun setStatusImage(status: ApiStatus){
         val statusImageView = rootView.status_image
         val newsList = rootView.news_list
         return when(status){
-            NewsApiStatus.LOADING -> {
+            ApiStatus.LOADING -> {
                 statusImageView.visibility = View.VISIBLE
                 newsList.visibility = View.GONE
                 statusImageView.setImageResource(R.drawable.loading_animation)
             }
 
-            NewsApiStatus.DONE -> {
+            ApiStatus.DONE -> {
                 newsList.visibility = View.VISIBLE
                 statusImageView.visibility = View.GONE
             }
 
-            NewsApiStatus.ERROR -> {
+            ApiStatus.ERROR -> {
                 statusImageView.visibility = View.VISIBLE
                 newsList.visibility = View.GONE
                 statusImageView.setImageResource(R.drawable.ic_connection_error)

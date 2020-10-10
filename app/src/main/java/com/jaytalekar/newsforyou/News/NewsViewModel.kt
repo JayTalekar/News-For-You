@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.jaytalekar.newsforyou.ApiStatus
 import com.jaytalekar.newsforyou.network.Article
 import com.jaytalekar.newsforyou.network.NewsApi
 import com.jaytalekar.newsforyou.network.NewsApiResponse
@@ -11,8 +12,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-
-enum class NewsApiStatus{ DONE, LOADING, ERROR}
 
 class NewsViewModel(private val country: String) : ViewModel(){
 
@@ -31,15 +30,15 @@ class NewsViewModel(private val country: String) : ViewModel(){
     val articleList : LiveData<List<Article>>
         get() = _articleList
 
-    private val _status = MutableLiveData<NewsApiStatus>()
-    val status : LiveData<NewsApiStatus>
+    private val _status = MutableLiveData<ApiStatus>()
+    val status : LiveData<ApiStatus>
         get() = _status
 
     init {
         _articleList.value = null
         _navigateToSelectedNews.value = null
         _response.value = null
-        _status.value = NewsApiStatus.LOADING
+        _status.value = ApiStatus.LOADING
         getTopHeadLines()
     }
 
@@ -59,16 +58,16 @@ class NewsViewModel(private val country: String) : ViewModel(){
             Log.i("NewsViewModel: ", "The Deferred instance is : ${deferred.toString()}")
             try{
                 //To help Display Status Image on screen
-                _status.value = NewsApiStatus.LOADING
+                _status.value = ApiStatus.LOADING
 
                 _response.value = deferred.await()
                 if(_response.value != null){
                     _articleList.value = _response.value!!.articles
                 }
 
-                _status.value = NewsApiStatus.DONE
+                _status.value = ApiStatus.DONE
             }catch (t : Throwable){
-                _status.value = NewsApiStatus.ERROR
+                _status.value = ApiStatus.ERROR
 
                 _articleList.value = listOf()
             }
