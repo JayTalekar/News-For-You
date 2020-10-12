@@ -32,4 +32,13 @@
             android:id="@+id/action_headlines_fragment_to_news_detail_fragment"
             app:destination="@id/news_detail_fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/news_search_fragment"
+        android:name="com.jaytalekar.newsforyou.NewsSearch.NewsSearchFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_news_search">
+        <action
+            android:id="@+id/action_newsSearchFragment_to_news_detail_fragment"
+            app:destination="@id/news_detail_fragment" />
+    </fragment>
 </navigation>

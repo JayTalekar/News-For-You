@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_headlines_icon"
         android:title="@string/show_headlines" />
     <item
-        android:id="@+id/search_fragment"
+        android:id="@+id/news_search_fragment"
         android:icon="@drawable/ic_search_icon"
         android:title="@string/show_search" />
     <item

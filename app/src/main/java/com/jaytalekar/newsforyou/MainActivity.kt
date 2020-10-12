@@ -16,7 +16,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val topLevelDestinations: Set<Int> = setOf(R.id.news_fragment, R.id.headlines_fragment)
+        val topLevelDestinations: Set<Int> = setOf(R.id.news_fragment,
+            R.id.headlines_fragment,
+            R.id.news_search_fragment)
 
         appBarConfiguration = AppBarConfiguration.Builder(topLevelDestinations).build()
 
