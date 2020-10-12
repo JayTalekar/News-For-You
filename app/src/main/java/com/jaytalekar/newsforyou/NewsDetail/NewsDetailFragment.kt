@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.jaytalekar.newsforyou.R
 
-class NewsDetail : Fragment() {
+class NewsDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -19,7 +19,7 @@ class NewsDetail : Fragment() {
         val rootView = LayoutInflater.from(this.activity)
             .inflate(R.layout.fragment_news_detail, container, false)
 
-        val article = NewsDetailArgs.fromBundle(arguments!!).article
+        val article = NewsDetailFragmentArgs.fromBundle(requireArguments()).article
 
         val viewModelFactory = NewsDetailModelFactory(article)
 

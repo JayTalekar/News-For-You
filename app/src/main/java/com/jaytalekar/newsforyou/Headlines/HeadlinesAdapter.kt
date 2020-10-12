@@ -8,28 +8,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.net.toUri
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.jaytalekar.newsforyou.DiffCallback
 import com.jaytalekar.newsforyou.R
+import com.jaytalekar.newsforyou.loadImage
 import com.jaytalekar.newsforyou.network.Article
 
-class HeadlinesAdapter(private val viewModel: HeadlinesViewModel)
+class HeadlinesAdapter(private val onClickListener : HeadlinesAdapter.OnClickListener)
     : ListAdapter<Article, HeadlinesAdapter.HeadlinesViewHolder>(DiffCallback){
-
-
-    companion object DiffCallback: DiffUtil.ItemCallback<Article>(){
-
-        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem.source.id == newItem.source.id
-        }
-    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeadlinesViewHolder {
@@ -42,7 +29,7 @@ class HeadlinesAdapter(private val viewModel: HeadlinesViewModel)
         holder.bind(article)
 
         holder.headlinesItem.setOnClickListener {
-            viewModel.eventNavigateToHeadlineDetail(article)
+            onClickListener.onClick(article)
         }
     }
 
@@ -77,20 +64,19 @@ class HeadlinesAdapter(private val viewModel: HeadlinesViewModel)
                     headlinesImage.visibility = View.GONE
                     this.setIsRecyclable(false)
                 } else {
-                    Glide.with(headlinesImage.context)
-                        .load(imgUri)
-                        .apply(
-                            RequestOptions()
-                                .placeholder(R.drawable.loading_animation)
-                                .error(R.drawable.ic_broken_image)
-                        )
-                        .into(headlinesImage)
+                    imgUri?.let { uri ->
+                        loadImage(uri, headlinesImage)
+                    }
                 }
 
             }
 
         }
 
+    }
+
+    class OnClickListener(val clickListener : (article : Article) -> Unit){
+        fun onClick(article: Article) = clickListener(article)
     }
 
 }

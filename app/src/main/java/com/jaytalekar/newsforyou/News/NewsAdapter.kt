@@ -8,27 +8,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.net.toUri
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.jaytalekar.newsforyou.DiffCallback
 import com.jaytalekar.newsforyou.R
+import com.jaytalekar.newsforyou.loadImage
 import com.jaytalekar.newsforyou.network.Article
 
 
-class NewsAdapter(private val viewModel: NewsViewModel) :
+class NewsAdapter(private val onClickListener: NewsAdapter.OnClickListener) :
     ListAdapter<Article, NewsAdapter.NewsViewHolder>(DiffCallback) {
-
-    companion object DiffCallback : DiffUtil.ItemCallback<Article>() {
-        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem.source.id == newItem.source.id
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
 
@@ -41,7 +30,7 @@ class NewsAdapter(private val viewModel: NewsViewModel) :
         holder.bind(article)
 
         holder.newsItem.setOnClickListener {
-            viewModel.eventNavigateToNewsDetail(article)
+            onClickListener.onClick(article)
         }
     }
 
@@ -78,20 +67,19 @@ class NewsAdapter(private val viewModel: NewsViewModel) :
                     newsImage.visibility = View.GONE
                     this.setIsRecyclable(false)
                 } else {
-                    Glide.with(newsImage.context)
-                        .load(imgUri)
-                        .apply(
-                            RequestOptions()
-                                .placeholder(R.drawable.loading_animation)
-                                .error(R.drawable.ic_broken_image)
-                        )
-                        .into(newsImage)
+                    imgUri?.let { uri ->
+                        loadImage(uri, newsImage)
+                    }
                 }
 
             }
 
         }
 
+    }
+
+    class OnClickListener(val clickListener : (article : Article) -> Unit){
+        fun onClick(article: Article) = clickListener(article)
     }
 
 

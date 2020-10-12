@@ -1,8 +1,7 @@
-package com.jaytalekar.newsforyou.News
+package com.jaytalekar.newsforyou.Headlines
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jaytalekar.newsforyou.ApiStatus
 import com.jaytalekar.newsforyou.R
-import kotlinx.android.synthetic.main.fragment_news.view.*
+import com.jaytalekar.newsforyou.ViewModelFactory
+import kotlinx.android.synthetic.main.fragment_headlines.view.*
 
-class News : Fragment() {
+class HeadlinesFragment : Fragment() {
 
     private lateinit var rootView: View
 
@@ -28,29 +28,28 @@ class News : Fragment() {
 
         // Inflate the Fragment as usual
         rootView = LayoutInflater.from(this.activity)
-            .inflate(R.layout.fragment_news, container, false)
+            .inflate(R.layout.fragment_headlines, container, false)
 
-        val country = this.resources.configuration.locale.country
-        Log.i("News Fragment: ", "country = $country")
+        val viewModelFactory = ViewModelFactory("in")
 
-        val viewModelFactory = NewsViewModelFactory(country)
-
-        val viewModel = ViewModelProvider(this, viewModelFactory).
-                                                                get(NewsViewModel::class.java)
+        val viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(HeadlinesViewModel::class.java)
 
         val navController = this.findNavController()
 
-        val adapter = NewsAdapter(viewModel)
-        val manager= StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        val adapter = HeadlinesAdapter(HeadlinesAdapter.OnClickListener { article ->
+            viewModel.eventNavigateToHeadlineDetail(article)
+        })
 
+        val manager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
 
-        val newsList = rootView.findViewById<RecyclerView>(R.id.news_list)
-        newsList.adapter = adapter
-        newsList.layoutManager = manager
+        val headlinesList = rootView.findViewById<RecyclerView>(R.id.headlines_list)
+        headlinesList.adapter = adapter
+        headlinesList.layoutManager = manager
 
-        newsList.addItemDecoration(object : RecyclerView.ItemDecoration(){
+        headlinesList.addItemDecoration(object : RecyclerView.ItemDecoration(){
             override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
-                val newsItemSpacing = this@News.resources.getDimension(R.dimen.news_item_spacing).toInt()
+                val newsItemSpacing = this@HeadlinesFragment.resources.getDimension(R.dimen.news_item_spacing).toInt()
 
                 outRect.top = newsItemSpacing
 
@@ -64,10 +63,10 @@ class News : Fragment() {
             }
         })
 
-        viewModel.navigateToSelectedNews.observe(this.viewLifecycleOwner, Observer{article ->
+        viewModel.selectedHeadline.observe(this.viewLifecycleOwner, Observer{ article ->
             if(article != null){
-                navController.navigate(NewsDirections.actionNewsToNewsDetail(article))
-                viewModel.eventNavigateToNewsDetailCompleted()
+                navController.navigate(HeadlinesFragmentDirections.actionHeadlinesFragmentToNewsDetailFragment(article))
+                viewModel.eventNavigateToHeadlineDetailCompleted()
             }
         })
 
@@ -83,23 +82,23 @@ class News : Fragment() {
     }
 
     private fun setStatusImage(status: ApiStatus){
-        val statusImageView = rootView.status_image
-        val newsList = rootView.news_list
+        val statusImageView = rootView.headlines_status_image
+        val headlinesList = rootView.headlines_list
         return when(status){
             ApiStatus.LOADING -> {
                 statusImageView.visibility = View.VISIBLE
-                newsList.visibility = View.GONE
+                headlinesList.visibility = View.GONE
                 statusImageView.setImageResource(R.drawable.loading_animation)
             }
 
             ApiStatus.DONE -> {
-                newsList.visibility = View.VISIBLE
+                headlinesList.visibility = View.VISIBLE
                 statusImageView.visibility = View.GONE
             }
 
             ApiStatus.ERROR -> {
                 statusImageView.visibility = View.VISIBLE
-                newsList.visibility = View.GONE
+                headlinesList.visibility = View.GONE
                 statusImageView.setImageResource(R.drawable.ic_connection_error)
                 Toast.makeText(statusImageView.context, "No Internet Connection !", Toast.LENGTH_SHORT).show()
             }

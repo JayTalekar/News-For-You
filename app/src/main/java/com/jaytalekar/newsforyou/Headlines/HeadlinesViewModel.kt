@@ -17,9 +17,9 @@ class HeadlinesViewModel(private val country: String) : ViewModel(){
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private val _navigateToSelectedHeadline = MutableLiveData<Article>()
-    val navigateToSelectedHeadline : LiveData<Article>
-        get() = _navigateToSelectedHeadline
+    private val _selectedHeadline = MutableLiveData<Article>()
+    val selectedHeadline : LiveData<Article>
+        get() = _selectedHeadline
 
     private val _response = MutableLiveData<NewsApiResponse>()
     val response : LiveData<NewsApiResponse>
@@ -34,19 +34,16 @@ class HeadlinesViewModel(private val country: String) : ViewModel(){
         get() = _status
 
     init {
-        _articleList.value = null
-        _navigateToSelectedHeadline.value = null
-        _response.value = null
         _status.value = ApiStatus.LOADING
         getTopHeadLines()
     }
 
     fun eventNavigateToHeadlineDetail(article: Article){
-        _navigateToSelectedHeadline.value = article
+        _selectedHeadline.value = article
     }
 
     fun eventNavigateToHeadlineDetailCompleted(){
-        _navigateToSelectedHeadline.value = null
+        _selectedHeadline.value = null
     }
 
     fun getTopHeadLines(){

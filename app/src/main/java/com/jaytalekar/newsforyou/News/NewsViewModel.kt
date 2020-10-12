@@ -18,9 +18,9 @@ class NewsViewModel(private val country: String) : ViewModel(){
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private val _navigateToSelectedNews = MutableLiveData<Article>()
-    val navigateToSelectedNews : LiveData<Article>
-        get() = _navigateToSelectedNews
+    private val _selectedNews = MutableLiveData<Article>()
+    val selectedNews : LiveData<Article>
+        get() = _selectedNews
 
     private val _response = MutableLiveData<NewsApiResponse>()
     val response : LiveData<NewsApiResponse>
@@ -35,19 +35,16 @@ class NewsViewModel(private val country: String) : ViewModel(){
         get() = _status
 
     init {
-        _articleList.value = null
-        _navigateToSelectedNews.value = null
-        _response.value = null
         _status.value = ApiStatus.LOADING
         getTopHeadLines()
     }
 
     fun eventNavigateToNewsDetail(article: Article){
-        _navigateToSelectedNews.value = article
+        _selectedNews.value = article
     }
 
     fun eventNavigateToNewsDetailCompleted(){
-        _navigateToSelectedNews.value = null
+        _selectedNews.value = null
     }
 
     fun getTopHeadLines(){
@@ -68,8 +65,6 @@ class NewsViewModel(private val country: String) : ViewModel(){
                 _status.value = ApiStatus.DONE
             }catch (t : Throwable){
                 _status.value = ApiStatus.ERROR
-
-                _articleList.value = listOf()
             }
             Log.i("NewsViewModel: ", "The Article List is : ${_articleList.value.toString()}")
         }

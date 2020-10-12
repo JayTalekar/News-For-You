@@ -1,25 +1,13 @@
 package com.jaytalekar.newsforyou.network
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.jaytalekar.newsforyou.API_KEY
+import com.jaytalekar.newsforyou.EVERYTHING
+import com.jaytalekar.newsforyou.HEADLINE
+import com.jaytalekar.newsforyou.SOURCES
 import kotlinx.coroutines.Deferred
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
-
-const val API_KEY = "18283fc13ec9425394098ba52fcda61d"
-
-const val HEADLINE = "top-headlines"
-const val EVERYTHING = "everything"
-const val SOURCES = "sources"
-const val BASE_URL = "https://newsapi.org/v2/"
-
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(GsonConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .baseUrl(BASE_URL)
-    .build()
 
 interface NewsApiService {
     @Headers("X-Api-Key: $API_KEY")
@@ -28,16 +16,11 @@ interface NewsApiService {
 
     @Headers("X-Api-Key: $API_KEY")
     @GET(EVERYTHING)
-    fun getEveryNews(@Query("country") country : String) : Deferred<NewsApiResponse>
+    fun getSearchedNews(@Query("q") query : String) : Deferred<NewsApiResponse>
 
     @Headers("X-Api-Key: $API_KEY")
     @GET(SOURCES)
-    fun getFromSources(@Query("country") country: String,
+    fun getSources(@Query("country") country: String,
                        @Query("language") language : String) : Deferred<NewsApiResponse>
 }
 
-object NewsApi{
-    val retrofitService : NewsApiService by lazy{
-        retrofit.create(NewsApiService::class.java)
-    }
-}
