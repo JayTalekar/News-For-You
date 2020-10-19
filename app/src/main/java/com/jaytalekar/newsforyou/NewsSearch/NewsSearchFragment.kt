@@ -49,6 +49,8 @@ class NewsSearchFragment : Fragment() {
 
                 viewModel.getSearchedNews(searchView.query.toString())
 
+                searchView.clearFocus()
+
                 return true
             }
         })

@@ -11,6 +11,6 @@ data class NewsApiResponse (
     val totalResults : Long,
 
     @SerializedName("articles")
-    val articles : List<Article> = listOf()
+    val articles : List<Article>
 )
 
