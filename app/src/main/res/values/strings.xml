@@ -19,6 +19,7 @@ Completely synergize resource taxing relationships via premier niche markets. Pr
     <string name="show_headlines">Headlines</string>
     <string name="show_all">News</string>
     <string name="show_sources">Sources</string>
+    <string name="show_favourite">Favourite</string>
     <string name="show_search">Search</string>
     <string name="search_news">Search News</string>
 </resources>

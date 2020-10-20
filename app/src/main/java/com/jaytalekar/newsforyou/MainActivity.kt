@@ -18,7 +18,8 @@ class MainActivity : AppCompatActivity() {
 
         val topLevelDestinations: Set<Int> = setOf(R.id.news_fragment,
             R.id.headlines_fragment,
-            R.id.news_search_fragment)
+            R.id.news_search_fragment,
+            R.id.favourite_news_fragment)
 
         appBarConfiguration = AppBarConfiguration.Builder(topLevelDestinations).build()
 

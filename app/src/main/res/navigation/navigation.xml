@@ -41,4 +41,13 @@
             android:id="@+id/action_newsSearchFragment_to_news_detail_fragment"
             app:destination="@id/news_detail_fragment" />
     </fragment>
+    <fragment
+        android:id="@+id/favourite_news_fragment"
+        android:name="com.jaytalekar.newsforyou.FavouriteNews.FavouriteNewsFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_favourite_news">
+        <action
+            android:id="@+id/action_favouriteNewsFragment_to_news_detail_fragment"
+            app:destination="@id/news_detail_fragment" />
+    </fragment>
 </navigation>

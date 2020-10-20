@@ -13,7 +13,7 @@
         android:icon="@drawable/ic_news_icon"
         android:title="@string/show_all" />
     <item
-        android:id="@+id/sources_fragment"
-        android:icon="@drawable/ic_source_icon"
-        android:title="@string/show_sources" />
+        android:id="@+id/favourite_news_fragment"
+        android:icon="@drawable/ic_heart_outline"
+        android:title="@string/show_favourite" />
 </menu>

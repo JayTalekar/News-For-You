@@ -5,7 +5,9 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.jaytalekar.newsforyou.database.FavouriteNews
 import com.jaytalekar.newsforyou.network.Article
+import com.jaytalekar.newsforyou.network.Source
 
 enum class ApiStatus{ DONE, LOADING, ERROR}
 
@@ -29,4 +31,24 @@ fun loadImage(imgUri: Uri, imageView: ImageView){
                 .error(R.drawable.ic_broken_image)
         )
         .into(imageView)
+}
+
+fun favouriteNewsToArticle(favNews: FavouriteNews): Article{
+    val source = Source(
+        id = favNews.news_Id.toString(),
+        name = "database"
+    )
+
+    val article = Article(
+        author = favNews.author,
+        title = favNews.title,
+        description = favNews.description,
+        content = favNews.content,
+        imageUrl = favNews.imageUrl,
+        articleUrl = favNews.articleUrl,
+        publishedAt = favNews.publishedAt,
+        source = source
+    )
+
+    return article
 }
