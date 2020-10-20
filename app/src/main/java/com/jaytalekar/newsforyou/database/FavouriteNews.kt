@@ -16,13 +16,13 @@ data class FavouriteNews(
     val title : String,
 
     @ColumnInfo(name = "description")
-    val description : String,
+    val description : String?,
 
     @ColumnInfo(name = "content")
-    val content : String,
+    val content : String?,
 
     @ColumnInfo(name = "image_Url")
-    val imageUrl : String,
+    val imageUrl : String?,
 
     @ColumnInfo(name = "article_Url")
     val articleUrl : String,
