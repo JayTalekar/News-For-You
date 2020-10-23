@@ -41,6 +41,8 @@ class HeadlinesAdapter(private val onClickListener : HeadlinesAdapter.OnClickLis
 
         private val headlinesHeader = itemView.findViewById<TextView>(R.id.news_header)
 
+        val favIcon = itemView.findViewById<ImageView>(R.id.favourite_icon)
+
         companion object{
             fun from(parent: ViewGroup): HeadlinesViewHolder{
                 val headlinesView = LayoutInflater.from(parent.context)
@@ -51,6 +53,12 @@ class HeadlinesAdapter(private val onClickListener : HeadlinesAdapter.OnClickLis
         }
 
         fun bind(article: Article?) {
+
+            with(favIcon.context.resources){
+                favIcon.layoutParams.width = getDimension(R.dimen.fav_large_icon_size).toInt()
+                favIcon.layoutParams.height = getDimension(R.dimen.fav_large_icon_size).toInt()
+            }
+
             article?.let {
 
                 headlinesHeader.text = it.title

@@ -40,6 +40,8 @@ class NewsSearchAdapter(private val onClickListener: OnClickListener)
 
         private val newsSearchHeader = itemView.findViewById<TextView>(R.id.news_header)
 
+        val favIcon = itemView.findViewById<ImageView>(R.id.favourite_icon)
+
         companion object{
 
             fun createViewHolder(parent: ViewGroup): NewsSearchViewHolder{
@@ -51,6 +53,12 @@ class NewsSearchAdapter(private val onClickListener: OnClickListener)
         }
 
         fun bind(article: Article){
+
+            with(favIcon.context.resources){
+                favIcon.layoutParams.width = getDimension(com.jaytalekar.newsforyou.R.dimen.fav_large_icon_size).toInt()
+                favIcon.layoutParams.height = getDimension(com.jaytalekar.newsforyou.R.dimen.fav_large_icon_size).toInt()
+            }
+
             article?.let {
 
                 newsSearchHeader.text = it.title

@@ -43,6 +43,8 @@ class NewsAdapter(private val onClickListener: NewsAdapter.OnClickListener) :
 
         private val newsHeader = itemView.findViewById<TextView>(R.id.news_header)
 
+        val favIcon = itemView.findViewById<ImageView>(R.id.favourite_icon)
+
         companion object {
 
             fun from(parent: ViewGroup): NewsViewHolder {
@@ -54,6 +56,12 @@ class NewsAdapter(private val onClickListener: NewsAdapter.OnClickListener) :
         }
 
         fun bind(article: Article?) {
+
+            with(favIcon.context.resources){
+                favIcon.layoutParams.width = getDimension(R.dimen.fav_small_icon_size).toInt()
+                favIcon.layoutParams.height = getDimension(R.dimen.fav_small_icon_size).toInt()
+            }
+
             article?.let {
 
                 newsHeader.text = it.title
