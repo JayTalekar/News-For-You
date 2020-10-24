@@ -5,15 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jaytalekar.newsforyou.ApiStatus
+import com.jaytalekar.newsforyou.articleToFavouriteNews
+import com.jaytalekar.newsforyou.database.NewsDatabaseDao
 import com.jaytalekar.newsforyou.network.Article
 import com.jaytalekar.newsforyou.network.NewsApi
 import com.jaytalekar.newsforyou.network.NewsApiResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
-class NewsViewModel(private val country: String) : ViewModel(){
+class NewsViewModel(private val country: String,
+                    private val database: NewsDatabaseDao) : ViewModel(){
 
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -69,5 +69,23 @@ class NewsViewModel(private val country: String) : ViewModel(){
             Log.i("NewsViewModel: ", "The Article List is : ${_articleList.value.toString()}")
         }
 
+    }
+
+    fun addFavouriteNews(article: Article){
+        val favouriteNews = articleToFavouriteNews(article)
+
+        coroutineScope.launch {
+            withContext(Dispatchers.IO){
+                database.insert(favouriteNews)
+            }
+        }
+    }
+
+    fun deleteFavouriteNews(article: Article){
+        coroutineScope.launch {
+            withContext(Dispatchers.IO){
+                database.delete(article.articleUrl)
+            }
+        }
     }
 }

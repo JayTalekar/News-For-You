@@ -2,7 +2,6 @@ package com.jaytalekar.newsforyou.News
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +13,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jaytalekar.newsforyou.ApiStatus
+import com.jaytalekar.newsforyou.NewsItemClickListeners
 import com.jaytalekar.newsforyou.R
 import com.jaytalekar.newsforyou.ViewModelFactory
+import com.jaytalekar.newsforyou.database.NewsDatabase
+import com.jaytalekar.newsforyou.network.Article
 import kotlinx.android.synthetic.main.fragment_news.view.*
 
 class NewsFragment : Fragment() {
 
     private lateinit var rootView: View
+
+    private lateinit var viewModel: NewsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,18 +36,20 @@ class NewsFragment : Fragment() {
             .inflate(R.layout.fragment_news, container, false)
 
         val country = this.resources.configuration.locale.country
-        Log.i("News Fragment: ", "country = $country")
 
-        val viewModelFactory = ViewModelFactory(country)
 
-        val viewModel = ViewModelProvider(this, viewModelFactory).
-                                                                get(NewsViewModel::class.java)
+        //Get the instance of Database DAO for viewModel
+        val database = NewsDatabase
+            .getInstance(this.requireActivity().applicationContext).newsDatabaseDao
+
+        val viewModelFactory = ViewModelFactory(country, database)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(NewsViewModel::class.java)
 
         val navController = this.findNavController()
 
-        val adapter = NewsAdapter(NewsAdapter.OnClickListener {article ->
-            viewModel.eventNavigateToNewsDetail(article)
-        })
+        val adapter = NewsAdapter(getNewsItemClickListener())
 
         val manager= StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
@@ -106,6 +112,22 @@ class NewsFragment : Fragment() {
                 newsList.visibility = View.GONE
                 statusImageView.setImageResource(R.drawable.ic_connection_error)
                 Toast.makeText(statusImageView.context, "No Internet Connection !", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun getNewsItemClickListener() : NewsItemClickListeners{
+        return object : NewsItemClickListeners{
+            override fun onNewsItemClick(article: Article) {
+                viewModel.eventNavigateToNewsDetail(article)
+            }
+
+            override fun onFavouriteClick(isFavourite: Boolean, article: Article) {
+                if (isFavourite){
+                    viewModel.deleteFavouriteNews(article)
+                } else{
+                    viewModel.addFavouriteNews(article)
+                }
             }
         }
     }

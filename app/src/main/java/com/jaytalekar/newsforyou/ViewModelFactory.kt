@@ -22,10 +22,15 @@ class ViewModelFactory() : ViewModelProvider.Factory {
         this.database = database
     }
 
+    constructor(country: String, database: NewsDatabaseDao) : this(){
+        this.country = country
+        this.database = database
+    }
+
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
         if (modelClass.isAssignableFrom(NewsViewModel::class.java)){
-            return NewsViewModel(country) as T
+            return NewsViewModel(country, database) as T
         }
         else if (modelClass.isAssignableFrom(HeadlinesViewModel::class.java)){
             return HeadlinesViewModel(country) as T

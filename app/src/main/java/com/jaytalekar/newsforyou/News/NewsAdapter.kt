@@ -11,12 +11,13 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.DiffCallback
+import com.jaytalekar.newsforyou.NewsItemClickListeners
 import com.jaytalekar.newsforyou.R
 import com.jaytalekar.newsforyou.loadImage
 import com.jaytalekar.newsforyou.network.Article
 
 
-class NewsAdapter(private val onClickListener: NewsAdapter.OnClickListener) :
+class NewsAdapter(private val newsItemClickListeners: NewsItemClickListeners) :
     ListAdapter<Article, NewsAdapter.NewsViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
@@ -30,7 +31,18 @@ class NewsAdapter(private val onClickListener: NewsAdapter.OnClickListener) :
         holder.bind(article)
 
         holder.newsItem.setOnClickListener {
-            onClickListener.onClick(article)
+            newsItemClickListeners.onNewsItemClick(article)
+        }
+
+        holder.favIcon.setOnClickListener{
+            newsItemClickListeners.onFavouriteClick(
+                holder.isFavourite,
+                article
+            )
+
+            holder.isFavourite = holder.isFavourite.not()
+
+            holder.setFavouriteIcon()
         }
     }
 
@@ -44,6 +56,8 @@ class NewsAdapter(private val onClickListener: NewsAdapter.OnClickListener) :
         private val newsHeader = itemView.findViewById<TextView>(R.id.news_header)
 
         val favIcon = itemView.findViewById<ImageView>(R.id.favourite_icon)
+
+        var isFavourite = false
 
         companion object {
 
@@ -61,6 +75,10 @@ class NewsAdapter(private val onClickListener: NewsAdapter.OnClickListener) :
                 favIcon.layoutParams.width = getDimension(R.dimen.fav_small_icon_size).toInt()
                 favIcon.layoutParams.height = getDimension(R.dimen.fav_small_icon_size).toInt()
             }
+
+            isFavourite = false
+
+            setFavouriteIcon()
 
             article?.let {
 
@@ -84,12 +102,15 @@ class NewsAdapter(private val onClickListener: NewsAdapter.OnClickListener) :
 
         }
 
-    }
+        fun setFavouriteIcon(){
+            if (isFavourite){
+                favIcon.setImageResource(R.drawable.ic_heart)
+            }else{
+                favIcon.setImageResource(R.drawable.ic_heart_outline)
+            }
+        }
 
-    class OnClickListener(val clickListener : (article : Article) -> Unit){
-        fun onClick(article: Article) = clickListener(article)
     }
-
 
 }
 

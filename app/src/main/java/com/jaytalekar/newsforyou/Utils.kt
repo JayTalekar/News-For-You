@@ -52,3 +52,16 @@ fun favouriteNewsToArticle(favNews: FavouriteNews): Article{
 
     return article
 }
+
+
+fun articleToFavouriteNews(article: Article): FavouriteNews{
+    return FavouriteNews(
+        author = article.author,
+        title = article.title,
+        description = article.description,
+        content = article.content,
+        articleUrl = article.articleUrl,
+        imageUrl = article.imageUrl,
+        publishedAt = article.publishedAt
+    )
+}
