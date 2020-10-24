@@ -1,26 +1,23 @@
 package com.jaytalekar.newsforyou.FavouriteNews
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jaytalekar.newsforyou.ApiStatus
 import com.jaytalekar.newsforyou.R
 import com.jaytalekar.newsforyou.ViewModelFactory
 import com.jaytalekar.newsforyou.database.NewsDatabase
 import com.jaytalekar.newsforyou.favouriteNewsToArticle
-import kotlinx.android.synthetic.main.fragment_favourite_news.view.*
 
 class FavouriteNewsFragment : Fragment() {
 
     private lateinit var rootView : View
+
+    private lateinit var viewModel : FavouriteNewsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,11 +27,13 @@ class FavouriteNewsFragment : Fragment() {
         rootView = LayoutInflater.from(this.context)
             .inflate(R.layout.fragment_favourite_news, container, false)
 
+        this.setHasOptionsMenu(true)
+
         val database = NewsDatabase.getInstance(this.requireActivity().application).newsDatabaseDao
 
         val viewModelFactory = ViewModelFactory(database)
 
-        val viewModel = ViewModelProvider(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
             .get(FavouriteNewsViewModel::class.java)
 
         val navController = this.findNavController()
@@ -57,10 +56,6 @@ class FavouriteNewsFragment : Fragment() {
             }
         })
 
-        viewModel.status.observe(this.viewLifecycleOwner, Observer {status ->
-            setStatusImage(status)
-        })
-
         viewModel.favNewsList.observe(this.viewLifecycleOwner, Observer{favNewsList ->
             adapter.submitList(favNewsList)
         })
@@ -68,27 +63,16 @@ class FavouriteNewsFragment : Fragment() {
         return rootView
     }
 
-    private fun setStatusImage(status: ApiStatus){
-        val statusImageView = rootView.favourite_status_image
-        val favNewsList = rootView.favourite_news_list
-        return when(status){
-            ApiStatus.LOADING -> {
-                statusImageView.visibility = View.VISIBLE
-                favNewsList.visibility = View.GONE
-                statusImageView.setImageResource(R.drawable.loading_animation)
-            }
-
-            ApiStatus.DONE -> {
-                favNewsList.visibility = View.VISIBLE
-                statusImageView.visibility = View.GONE
-            }
-
-            ApiStatus.ERROR -> {
-                statusImageView.visibility = View.VISIBLE
-                favNewsList.visibility = View.GONE
-                statusImageView.setImageResource(R.drawable.ic_connection_error)
-                Toast.makeText(statusImageView.context, "No Internet Connection !", Toast.LENGTH_SHORT).show()
-            }
-        }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.favourite_news_menu, menu)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.clear_all_news) {
+            viewModel.onClear()
+            return true
+        }
+        return false
+    }
+
 }
