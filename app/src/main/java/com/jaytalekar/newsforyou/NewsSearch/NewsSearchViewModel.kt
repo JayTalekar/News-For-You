@@ -1,18 +1,19 @@
 package com.jaytalekar.newsforyou.NewsSearch
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jaytalekar.newsforyou.ApiStatus
+import com.jaytalekar.newsforyou.articleToFavouriteNews
+import com.jaytalekar.newsforyou.database.NewsDatabaseDao
 import com.jaytalekar.newsforyou.network.Article
 import com.jaytalekar.newsforyou.network.NewsApi
 import com.jaytalekar.newsforyou.network.NewsApiResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
-class NewsSearchViewModel(private val country: String) : ViewModel(){
+class NewsSearchViewModel(private val country: String,
+                        private val database: NewsDatabaseDao) : ViewModel(){
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -60,6 +61,27 @@ class NewsSearchViewModel(private val country: String) : ViewModel(){
 
             }catch (t: Throwable){
                 _status.value = ApiStatus.ERROR
+            }
+        }
+    }
+
+    fun addFavouriteNews(article: Article){
+        val favouriteNews = articleToFavouriteNews(article)
+
+        coroutineScope.launch {
+            withContext(Dispatchers.IO){
+                Log.i("NewsSearch ", "Inserting Searched News")
+                database.insert(favouriteNews)
+                Log.i("NewsSearch ", "Done Inserting Searched News!")
+
+            }
+        }
+    }
+
+    fun deleteFavouriteNews(article: Article){
+        coroutineScope.launch {
+            withContext(Dispatchers.IO){
+                database.delete(article.articleUrl)
             }
         }
     }

@@ -11,11 +11,12 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.DiffCallback
+import com.jaytalekar.newsforyou.NewsItemClickListeners
 import com.jaytalekar.newsforyou.R
 import com.jaytalekar.newsforyou.loadImage
 import com.jaytalekar.newsforyou.network.Article
 
-class NewsSearchAdapter(private val onClickListener: OnClickListener)
+class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListeners)
     : ListAdapter<Article, NewsSearchAdapter.NewsSearchViewHolder>(DiffCallback){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsSearchViewHolder {
@@ -28,7 +29,18 @@ class NewsSearchAdapter(private val onClickListener: OnClickListener)
         holder.bind(article)
 
         holder.newsSearchItem.setOnClickListener{
-            onClickListener.onClick(article)
+            newsItemClickListeners.onNewsItemClick(article)
+        }
+
+        holder.favIcon.setOnClickListener{
+            newsItemClickListeners.onFavouriteClick(
+                holder.isFavourite,
+                article
+            )
+
+            holder.isFavourite = holder.isFavourite.not()
+
+            holder.setFavouriteIcon()
         }
     }
 
@@ -41,6 +53,8 @@ class NewsSearchAdapter(private val onClickListener: OnClickListener)
         private val newsSearchHeader = itemView.findViewById<TextView>(R.id.news_header)
 
         val favIcon = itemView.findViewById<ImageView>(R.id.favourite_icon)
+
+        var isFavourite = false
 
         companion object{
 
@@ -55,11 +69,15 @@ class NewsSearchAdapter(private val onClickListener: OnClickListener)
         fun bind(article: Article){
 
             with(favIcon.context.resources){
-                favIcon.layoutParams.width = getDimension(com.jaytalekar.newsforyou.R.dimen.fav_large_icon_size).toInt()
-                favIcon.layoutParams.height = getDimension(com.jaytalekar.newsforyou.R.dimen.fav_large_icon_size).toInt()
+                favIcon.layoutParams.width = getDimension(R.dimen.fav_large_icon_size).toInt()
+                favIcon.layoutParams.height = getDimension(R.dimen.fav_large_icon_size).toInt()
             }
 
-            article?.let {
+            isFavourite = false
+
+            setFavouriteIcon()
+
+            article.let {
 
                 newsSearchHeader.text = it.title
 
@@ -81,9 +99,14 @@ class NewsSearchAdapter(private val onClickListener: OnClickListener)
 
         }
 
+        fun setFavouriteIcon(){
+            if (isFavourite){
+                favIcon.setImageResource(R.drawable.ic_heart)
+            }else{
+                favIcon.setImageResource(R.drawable.ic_heart_outline)
+            }
+        }
+
     }
 
-    class OnClickListener(val clickListener : (article : Article) -> Unit){
-        fun onClick(article: Article) = clickListener(article)
-    }
 }

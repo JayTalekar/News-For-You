@@ -14,10 +14,6 @@ class ViewModelFactory() : ViewModelProvider.Factory {
 
     private lateinit var country : String
 
-    constructor(country: String) : this(){
-        this.country = country
-    }
-
     constructor(database : NewsDatabaseDao) : this(){
         this.database = database
     }
@@ -33,10 +29,10 @@ class ViewModelFactory() : ViewModelProvider.Factory {
             return NewsViewModel(country, database) as T
         }
         else if (modelClass.isAssignableFrom(HeadlinesViewModel::class.java)){
-            return HeadlinesViewModel(country) as T
+            return HeadlinesViewModel(country, database) as T
         }
         else if (modelClass.isAssignableFrom(NewsSearchViewModel::class.java)){
-            return NewsSearchViewModel(country) as T
+            return NewsSearchViewModel(country, database) as T
         }
         else if (modelClass.isAssignableFrom(FavouriteNewsViewModel::class.java)){
             return FavouriteNewsViewModel(database) as T

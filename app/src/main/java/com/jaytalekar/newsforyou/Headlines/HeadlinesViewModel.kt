@@ -5,15 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jaytalekar.newsforyou.ApiStatus
+import com.jaytalekar.newsforyou.articleToFavouriteNews
+import com.jaytalekar.newsforyou.database.NewsDatabaseDao
 import com.jaytalekar.newsforyou.network.Article
 import com.jaytalekar.newsforyou.network.NewsApi
 import com.jaytalekar.newsforyou.network.NewsApiResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
-class HeadlinesViewModel(private val country: String) : ViewModel(){
+class HeadlinesViewModel(private val country: String,
+                        private val database: NewsDatabaseDao) : ViewModel(){
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -51,7 +51,7 @@ class HeadlinesViewModel(private val country: String) : ViewModel(){
         coroutineScope.launch {
             val deferred = NewsApi.retrofitService
                 .getHeadlines(country)
-            Log.i("HeadlinesViewModel: ", "The Deferred instance is : ${deferred.toString()}")
+            Log.i("HeadlinesViewModel: ", "The Deferred instance is : $deferred")
             try{
                 //To help Display Status Image on screen
                 _status.value = ApiStatus.LOADING
@@ -70,5 +70,23 @@ class HeadlinesViewModel(private val country: String) : ViewModel(){
             Log.i("HeadlinesViewModel: ", "The Article List is : ${_articleList.value.toString()}")
         }
 
+    }
+
+    fun addFavouriteNews(article: Article){
+        val favouriteNews = articleToFavouriteNews(article)
+
+        coroutineScope.launch {
+            withContext(Dispatchers.IO){
+                database.insert(favouriteNews)
+            }
+        }
+    }
+
+    fun deleteFavouriteNews(article: Article){
+        coroutineScope.launch {
+            withContext(Dispatchers.IO){
+                database.delete(article.articleUrl)
+            }
+        }
     }
 }
