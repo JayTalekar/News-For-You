@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jaytalekar.newsforyou.ApiStatus
 import com.jaytalekar.newsforyou.articleToFavouriteNews
+import com.jaytalekar.newsforyou.database.FavouriteNews
 import com.jaytalekar.newsforyou.database.NewsDatabaseDao
 import com.jaytalekar.newsforyou.network.Article
 import com.jaytalekar.newsforyou.network.NewsApi
@@ -29,6 +30,10 @@ class NewsViewModel(private val country: String,
     private val _articleList = MutableLiveData<List<Article>>()
     val articleList : LiveData<List<Article>>
         get() = _articleList
+
+    private val _favNewsList = database.getAllNews()
+    val favNewsList : LiveData<List<FavouriteNews>>
+        get() = _favNewsList
 
     private val _status = MutableLiveData<ApiStatus>()
     val status : LiveData<ApiStatus>

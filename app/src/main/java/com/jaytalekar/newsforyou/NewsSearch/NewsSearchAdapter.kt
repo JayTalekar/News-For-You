@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.DiffCallback
 import com.jaytalekar.newsforyou.NewsItemClickListeners
 import com.jaytalekar.newsforyou.R
+import com.jaytalekar.newsforyou.database.FavouriteNews
 import com.jaytalekar.newsforyou.loadImage
 import com.jaytalekar.newsforyou.network.Article
 
 class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListeners)
     : ListAdapter<Article, NewsSearchAdapter.NewsSearchViewHolder>(DiffCallback){
+
+    private lateinit var favNewsList : List<FavouriteNews>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsSearchViewHolder {
         return NewsSearchViewHolder.createViewHolder(parent)
@@ -26,7 +29,7 @@ class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListene
     override fun onBindViewHolder(holder: NewsSearchViewHolder, position: Int) {
         val article = getItem(position)!!
 
-        holder.bind(article)
+        holder.bind(article, favNewsList)
 
         holder.newsSearchItem.setOnClickListener{
             newsItemClickListeners.onNewsItemClick(article)
@@ -42,6 +45,10 @@ class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListene
 
             holder.setFavouriteIcon()
         }
+    }
+
+    fun submitFavouriteNewsList(favNewsList: List<FavouriteNews>) {
+        this.favNewsList = favNewsList
     }
 
     class NewsSearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -66,14 +73,14 @@ class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListene
             }
         }
 
-        fun bind(article: Article){
+        fun bind(article: Article, favNewsList: List<FavouriteNews>){
 
             with(favIcon.context.resources){
                 favIcon.layoutParams.width = getDimension(R.dimen.fav_large_icon_size).toInt()
                 favIcon.layoutParams.height = getDimension(R.dimen.fav_large_icon_size).toInt()
             }
 
-            isFavourite = false
+            isFavourite = checkFavouriteOrNot(article, favNewsList)
 
             setFavouriteIcon()
 
@@ -105,6 +112,15 @@ class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListene
             }else{
                 favIcon.setImageResource(R.drawable.ic_heart_outline)
             }
+        }
+
+        private fun checkFavouriteOrNot(article: Article?, favNewsList: List<FavouriteNews>): Boolean{
+            for (favNews in favNewsList){
+                if (article?.articleUrl == favNews.articleUrl){
+                    return true
+                }
+            }
+            return false
         }
 
     }

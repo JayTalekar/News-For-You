@@ -89,6 +89,10 @@ class NewsFragment : Fragment() {
             adapter.submitList(articleList)
         })
 
+        viewModel.favNewsList.observe(this.viewLifecycleOwner, Observer {favNewsList ->
+            adapter.submitFavouriteNewsList(favNewsList)
+        })
+
         return rootView
     }
 
