@@ -45,6 +45,10 @@ class FavouriteNewsAdapter(private val onClickListener: OnClickListener)
 
     }
 
+    fun getFavouriteNews(position: Int): FavouriteNews {
+        return getItem(position)
+    }
+
     class FavouriteNewsHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
 
         val favNewsItem : CardView = itemView.findViewById<CardView>(R.id.news_item)

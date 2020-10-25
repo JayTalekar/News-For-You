@@ -51,7 +51,9 @@ class FavouriteNewsViewModel(private val database: NewsDatabaseDao): ViewModel()
 
     fun onNavigateToNewsDetails(newsId : Long){
         uiScope.launch {
-            _selectedNews.value = database.get(newsId)
+            withContext(Dispatchers.IO){
+                _selectedNews.postValue(database.get(newsId))
+            }
         }
     }
 

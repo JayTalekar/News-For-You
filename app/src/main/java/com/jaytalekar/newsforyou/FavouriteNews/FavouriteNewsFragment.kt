@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.jaytalekar.newsforyou.R
 import com.jaytalekar.newsforyou.ViewModelFactory
@@ -48,6 +49,8 @@ class FavouriteNewsFragment : Fragment() {
         favNewsListView.adapter = adapter
         favNewsListView.layoutManager = manager
 
+        getItemTouchHelper(adapter).attachToRecyclerView(favNewsListView)
+
         viewModel.selectedNews.observe(this.viewLifecycleOwner, Observer {favNews ->
             if (favNews != null) {
                 val article = favouriteNewsToArticle(favNews)
@@ -73,6 +76,30 @@ class FavouriteNewsFragment : Fragment() {
             return true
         }
         return false
+    }
+
+    private fun getItemTouchHelper(adapter: FavouriteNewsAdapter): ItemTouchHelper {
+        return ItemTouchHelper(
+            object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val fromPos = viewHolder.adapterPosition
+                    val toPos = target.adapterPosition
+                    return false // true if moved, false otherwise
+                }
+
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int
+                ) {
+                    val favouriteNews = adapter.getFavouriteNews(viewHolder.adapterPosition)
+                    adapter.notifyItemRemoved(viewHolder.adapterPosition)
+                    viewModel.deleteFavouriteNews(favouriteNews)
+                }
+            })
     }
 
 }
