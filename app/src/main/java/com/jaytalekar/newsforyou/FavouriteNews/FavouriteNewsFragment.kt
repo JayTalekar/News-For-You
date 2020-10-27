@@ -1,5 +1,6 @@
 package com.jaytalekar.newsforyou.FavouriteNews
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -48,6 +49,8 @@ class FavouriteNewsFragment : Fragment() {
         val favNewsListView = rootView.findViewById<RecyclerView>(R.id.favourite_news_list)
         favNewsListView.adapter = adapter
         favNewsListView.layoutManager = manager
+
+        favNewsListView.addItemDecoration(this.getItemDecorations())
 
         getItemTouchHelper(adapter).attachToRecyclerView(favNewsListView)
 
@@ -100,6 +103,19 @@ class FavouriteNewsFragment : Fragment() {
                     viewModel.deleteFavouriteNews(favouriteNews)
                 }
             })
+    }
+
+    private fun getItemDecorations(): RecyclerView.ItemDecoration {
+        return object : RecyclerView.ItemDecoration(){
+            override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
+                val newsItemSpacing = this@FavouriteNewsFragment.resources.getDimension(R.dimen.news_item_spacing).toInt()
+
+                outRect.top = newsItemSpacing
+
+                outRect.left = newsItemSpacing
+                outRect.right = newsItemSpacing
+            }
+        }
     }
 
 }

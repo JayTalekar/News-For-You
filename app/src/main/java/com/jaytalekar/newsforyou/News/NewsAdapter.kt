@@ -25,11 +25,11 @@ class NewsAdapter(private val newsItemClickListeners: NewsItemClickListeners) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
 
-        return NewsViewHolder.from(parent)
+        return NewsViewHolder.createViewHolder(parent)
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        val article = getItem(position)!!
+        val article = getItem(position)
 
         holder.bind(article, favNewsList)
 
@@ -64,11 +64,11 @@ class NewsAdapter(private val newsItemClickListeners: NewsItemClickListeners) :
 
         val favIcon = itemView.findViewById<ImageView>(R.id.favourite_icon)
 
-        var isFavourite = false
+        var isFavourite: Boolean = false
 
         companion object {
 
-            fun from(parent: ViewGroup): NewsViewHolder {
+            fun createViewHolder(parent: ViewGroup): NewsViewHolder {
                 val newsView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.news_item, parent, false)
 
@@ -76,7 +76,7 @@ class NewsAdapter(private val newsItemClickListeners: NewsItemClickListeners) :
             }
         }
 
-        fun bind(article: Article?, favNewsList: List<FavouriteNews>) {
+        fun bind(article: Article, favNewsList: List<FavouriteNews>) {
 
             with(favIcon.context.resources){
                 favIcon.layoutParams.width = getDimension(R.dimen.fav_small_icon_size).toInt()
@@ -87,7 +87,7 @@ class NewsAdapter(private val newsItemClickListeners: NewsItemClickListeners) :
 
             setFavouriteIcon()
 
-            article?.let {
+            article.let {
 
                 newsHeader.text = it.title
 
@@ -117,9 +117,9 @@ class NewsAdapter(private val newsItemClickListeners: NewsItemClickListeners) :
             }
         }
 
-        private fun checkFavouriteOrNot(article: Article?, favNewsList: List<FavouriteNews>): Boolean{
+        private fun checkFavouriteOrNot(article: Article, favNewsList: List<FavouriteNews>): Boolean{
             for (favNews in favNewsList){
-                if (article?.articleUrl == favNews.articleUrl){
+                if (article.articleUrl == favNews.articleUrl){
                     return true
                 }
             }

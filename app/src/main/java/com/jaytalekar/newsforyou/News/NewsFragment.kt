@@ -58,21 +58,7 @@ class NewsFragment : Fragment() {
         newsList.adapter = adapter
         newsList.layoutManager = manager
 
-        newsList.addItemDecoration(object : RecyclerView.ItemDecoration(){
-            override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
-                val newsItemSpacing = this@NewsFragment.resources.getDimension(R.dimen.news_item_spacing).toInt()
-
-                outRect.top = newsItemSpacing
-
-                if(itemPosition % 2 == 0 ){
-                    outRect.left = newsItemSpacing
-                    outRect.right = newsItemSpacing / 2
-                }else{
-                    outRect.left = newsItemSpacing / 2
-                    outRect.right = newsItemSpacing
-                }
-            }
-        })
+        newsList.addItemDecoration(this.getItemDecorations())
 
         viewModel.selectedNews.observe(this.viewLifecycleOwner, Observer{ article ->
             if(article != null){
@@ -131,6 +117,24 @@ class NewsFragment : Fragment() {
                     viewModel.deleteFavouriteNews(article)
                 } else{
                     viewModel.addFavouriteNews(article)
+                }
+            }
+        }
+    }
+
+    private fun getItemDecorations(): RecyclerView.ItemDecoration {
+        return object : RecyclerView.ItemDecoration(){
+            override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
+                val newsItemSpacing = this@NewsFragment.resources.getDimension(R.dimen.news_item_spacing).toInt()
+
+                outRect.top = newsItemSpacing
+
+                if(itemPosition % 2 == 0 ){
+                    outRect.left = newsItemSpacing
+                    outRect.right = newsItemSpacing / 2
+                }else{
+                    outRect.left = newsItemSpacing / 2
+                    outRect.right = newsItemSpacing
                 }
             }
         }

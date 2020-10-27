@@ -62,15 +62,13 @@ class HeadlinesViewModel(private val country: String,
                 _status.value = ApiStatus.LOADING
 
                 _response.value = deferred.await()
-                if(_response.value != null){
-                    _articleList.value = _response.value!!.articles
+                _response.value?.let {
+                    _articleList.value = it.articles
                 }
 
                 _status.value = ApiStatus.DONE
             }catch (t : Throwable){
                 _status.value = ApiStatus.ERROR
-
-                _articleList.value = listOf()
             }
             Log.i("HeadlinesViewModel: ", "The Article List is : ${_articleList.value.toString()}")
         }

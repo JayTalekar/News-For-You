@@ -27,7 +27,7 @@ class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListene
     }
 
     override fun onBindViewHolder(holder: NewsSearchViewHolder, position: Int) {
-        val article = getItem(position)!!
+        val article = getItem(position)
 
         holder.bind(article, favNewsList)
 
@@ -61,7 +61,7 @@ class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListene
 
         val favIcon = itemView.findViewById<ImageView>(R.id.favourite_icon)
 
-        var isFavourite = false
+        var isFavourite: Boolean = false
 
         companion object{
 
@@ -114,9 +114,9 @@ class NewsSearchAdapter(private val newsItemClickListeners: NewsItemClickListene
             }
         }
 
-        private fun checkFavouriteOrNot(article: Article?, favNewsList: List<FavouriteNews>): Boolean{
+        private fun checkFavouriteOrNot(article: Article, favNewsList: List<FavouriteNews>): Boolean{
             for (favNews in favNewsList){
-                if (article?.articleUrl == favNews.articleUrl){
+                if (article.articleUrl == favNews.articleUrl){
                     return true
                 }
             }

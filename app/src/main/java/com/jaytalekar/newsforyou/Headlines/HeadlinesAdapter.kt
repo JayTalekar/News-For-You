@@ -23,7 +23,7 @@ class HeadlinesAdapter(private val newsItemClickListeners: NewsItemClickListener
     private lateinit var favNewsList : List<FavouriteNews>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeadlinesViewHolder {
-        return HeadlinesViewHolder.from(parent)
+        return HeadlinesViewHolder.createViewHolder(parent)
     }
 
     override fun onBindViewHolder(holder: HeadlinesViewHolder, position: Int) {
@@ -61,10 +61,10 @@ class HeadlinesAdapter(private val newsItemClickListeners: NewsItemClickListener
 
         val favIcon = itemView.findViewById<ImageView>(R.id.favourite_icon)
 
-        var isFavourite = false
+        var isFavourite: Boolean = false
 
         companion object{
-            fun from(parent: ViewGroup): HeadlinesViewHolder{
+            fun createViewHolder(parent: ViewGroup): HeadlinesViewHolder{
                 val headlinesView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.news_item, parent, false)
 
@@ -72,7 +72,7 @@ class HeadlinesAdapter(private val newsItemClickListeners: NewsItemClickListener
             }
         }
 
-        fun bind(article: Article?, favNewsList: List<FavouriteNews>) {
+        fun bind(article: Article, favNewsList: List<FavouriteNews>) {
 
             with(favIcon.context.resources){
                 favIcon.layoutParams.width = getDimension(R.dimen.fav_large_icon_size).toInt()
@@ -83,7 +83,7 @@ class HeadlinesAdapter(private val newsItemClickListeners: NewsItemClickListener
 
             setFavouriteIcon()
 
-            article?.let {
+            article.let {
 
                 headlinesHeader.text = it.title
 
@@ -113,7 +113,7 @@ class HeadlinesAdapter(private val newsItemClickListeners: NewsItemClickListener
             }
         }
 
-        private fun checkFavouriteOrNot(article: Article?, favNewsList: List<FavouriteNews>): Boolean{
+        private fun checkFavouriteOrNot(article: Article, favNewsList: List<FavouriteNews>): Boolean{
             for (favNews in favNewsList){
                 if (article?.articleUrl == favNews.articleUrl){
                     return true

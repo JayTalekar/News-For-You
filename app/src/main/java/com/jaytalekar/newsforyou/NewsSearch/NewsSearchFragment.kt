@@ -1,5 +1,6 @@
 package com.jaytalekar.newsforyou.NewsSearch
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,21 +49,9 @@ class NewsSearchFragment : Fragment() {
 
         val searchView = rootView.findViewById<SearchView>(R.id.search_view)
         searchView.isSubmitButtonEnabled = true
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
 
-            override fun onQueryTextChange(p0: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-
-                viewModel.getSearchedNews(searchView.query.toString())
-
-                searchView.clearFocus()
-
-                return true
-            }
-        })
+        //set search view's query listener
+        searchView.setOnQueryTextListener(getQueryTextListener(searchView))
 
         val adapter = NewsSearchAdapter(getNewsItemClickListener())
 
@@ -71,6 +60,8 @@ class NewsSearchFragment : Fragment() {
         val searchList = rootView.findViewById<RecyclerView>(R.id.search_list)
         searchList.adapter = adapter
         searchList.layoutManager = manager
+
+        searchList.addItemDecoration(this.getItemDecorations())
 
         viewModel.selectedNews.observe(this.viewLifecycleOwner, Observer{ article ->
             if(article != null) {
@@ -131,6 +122,37 @@ class NewsSearchFragment : Fragment() {
                 } else{
                     viewModel.addFavouriteNews(article)
                 }
+            }
+        }
+    }
+
+    private fun getQueryTextListener(searchView: SearchView): SearchView.OnQueryTextListener {
+        return object : SearchView.OnQueryTextListener{
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+
+                viewModel.getSearchedNews(searchView.query.toString())
+
+                searchView.clearFocus()
+
+                return true
+            }
+        }
+    }
+
+    private fun getItemDecorations(): RecyclerView.ItemDecoration {
+        return object : RecyclerView.ItemDecoration(){
+            override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
+                val newsItemSpacing = this@NewsSearchFragment.resources.getDimension(R.dimen.news_item_spacing).toInt()
+
+                outRect.top = newsItemSpacing
+
+                outRect.left = newsItemSpacing
+                outRect.right = newsItemSpacing
             }
         }
     }

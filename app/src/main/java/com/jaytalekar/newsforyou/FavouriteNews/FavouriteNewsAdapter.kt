@@ -67,7 +67,7 @@ class FavouriteNewsAdapter(private val onClickListener: OnClickListener)
         }
 
         fun bind(favouriteNews : FavouriteNews){
-            favouriteNews?.let {
+            favouriteNews.let {
 
                 favNewsHeader.text = it.title
 

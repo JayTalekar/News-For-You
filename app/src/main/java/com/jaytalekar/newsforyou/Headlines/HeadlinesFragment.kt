@@ -54,21 +54,7 @@ class HeadlinesFragment : Fragment() {
         headlinesList.adapter = adapter
         headlinesList.layoutManager = manager
 
-        headlinesList.addItemDecoration(object : RecyclerView.ItemDecoration(){
-            override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
-                val newsItemSpacing = this@HeadlinesFragment.resources.getDimension(R.dimen.news_item_spacing).toInt()
-
-                outRect.top = newsItemSpacing
-
-                if(itemPosition % 2 == 0 ){
-                    outRect.left = newsItemSpacing
-                    outRect.right = newsItemSpacing / 2
-                }else{
-                    outRect.left = newsItemSpacing / 2
-                    outRect.right = newsItemSpacing
-                }
-            }
-        })
+        headlinesList.addItemDecoration(this.getItemDecorations())
 
         viewModel.selectedHeadline.observe(this.viewLifecycleOwner, Observer{ article ->
             if(article != null){
@@ -128,6 +114,19 @@ class HeadlinesFragment : Fragment() {
                 } else{
                     viewModel.addFavouriteNews(article)
                 }
+            }
+        }
+    }
+
+    private fun getItemDecorations(): RecyclerView.ItemDecoration {
+        return object : RecyclerView.ItemDecoration(){
+            override fun getItemOffsets(outRect: Rect, itemPosition: Int, parent: RecyclerView) {
+                val newsItemSpacing = this@HeadlinesFragment.resources.getDimension(R.dimen.news_item_spacing).toInt()
+
+                outRect.top = newsItemSpacing
+
+                outRect.left = newsItemSpacing
+                outRect.right = newsItemSpacing
             }
         }
     }
